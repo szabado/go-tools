@@ -1,4 +1,4 @@
-package cachepersistence
+package persistence
 
 import (
 	"crypto/sha256"
