@@ -2,6 +2,6 @@
 .hermit
 
 # Binaries
-cache
-mssh
-zkcli
+./cache
+./mssh
+./zkcli
