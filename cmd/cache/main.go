@@ -1,4 +1,4 @@
-package cache
+package main
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/szabado/go-tools/cmd/cache/persistence"
+	"github.com/szabado/go-tools/pkg/filesystemcache"
 )
 
 var usage = `cache: A Cache for slow shell commands.

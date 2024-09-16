@@ -1,4 +1,4 @@
-package cache
+package main
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 
 	a "github.com/stretchr/testify/assert"
 
-	"github.com/szabado/go-tools/cmd/cache/persistence"
+	"github.com/szabado/go-tools/pkg/filesystemcache"
 )
 
 func setup(assert *a.Assertions) {

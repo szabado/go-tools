@@ -1,4 +1,4 @@
-module github.com/szabado/cache
+module github.com/szabado/go-tools
 
 go 1.12
 
