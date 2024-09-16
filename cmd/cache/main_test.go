@@ -11,7 +11,7 @@ import (
 )
 
 func setup(assert *a.Assertions) {
-	assert.NoError(persistence.NewFsPersister().Wipe())
+	assert.NoError(filesystemcache.NewFsPersister().Wipe())
 }
 
 func TestRunRoot(t *testing.T) {
@@ -58,7 +58,7 @@ func TestRunRoot(t *testing.T) {
 				// Test the result matches after writing to and reading from the file
 				_, _, _, cmd, err := parseArgs(test.input)
 				assert.NoError(err)
-				persistence.NewFsPersister().ReadInto(cmd, &buf)
+				filesystemcache.NewFsPersister().ReadInto(cmd, &buf)
 				assert.Equal(test.output, buf.String())
 			}
 		})

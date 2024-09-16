@@ -102,7 +102,7 @@ func runRoot(args []string, output io.Writer) error {
 	}
 
 	logrus.Infof("Command: %s", command)
-	persister := persistence.NewFsPersister()
+	persister := filesystemcache.NewFsPersister()
 
 	if clearCache {
 		logrus.Info("Deleting database")
@@ -112,12 +112,12 @@ func runRoot(args []string, output io.Writer) error {
 	return runCommand(persister, command, output, overwrite)
 }
 
-func runCommand(persister *persistence.FsPersister, command string, output io.Writer, overwrite bool) error {
+func runCommand(persister *filesystemcache.FsPersister, command string, output io.Writer, overwrite bool) error {
 	if !overwrite {
 		err := persister.ReadInto(command, output)
-		if err == persistence.ErrKeyNotFound {
+		if err == filesystemcache.ErrKeyNotFound {
 			logrus.Debug("No cached result found")
-		} else if err != nil && err != persistence.ErrKeyNotFound {
+		} else if err != nil && err != filesystemcache.ErrKeyNotFound {
 			logrus.WithError(err).Errorf("Unknown error fetching cached result")
 		} else if err == nil {
 			logrus.Debug("Found cached result, exiting early")
