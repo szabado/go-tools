@@ -7,7 +7,7 @@ import (
 
 	a "github.com/stretchr/testify/assert"
 
-	"github.com/szabado/go-tools/binaries/cache/persistence"
+	"github.com/szabado/go-tools/cmd/cache/persistence"
 )
 
 func setup(assert *a.Assertions) {

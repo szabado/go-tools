@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/go-tools/binaries/cache/persistence"
+	"github.com/szabado/go-tools/cmd/cache/persistence"
 )
 
 var usage = `cache: A Cache for slow shell commands.
