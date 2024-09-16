@@ -1,5 +1,8 @@
 # [@szabado](https://github.com/szabado)'s go tooling monorepo
 
+[![codecov](https://codecov.io/gh/szabado/go-tools/graph/badge.svg?token=0P63IKE7ZG)](https://codecov.io/gh/szabado/go-tools)
+[![goreportcard](https://goreportcard.com/badge/github.com/szabado/go-tools)](https://goreportcard.com/report/github.com/szabado/go-tools)
+
 This contains various tooling, organized in a monorepo for ease of management.
 
 Tools:
