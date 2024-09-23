@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/sirupsen/logrus"
-	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -26,9 +25,9 @@ var rootCmd = &cobra.Command{
 	Short: "A tool for diffing input pasted in.",
 	PersistentPreRunE: func(c *cobra.Command, args []string) error {
 		if verbose {
-			log.SetLevel(log.InfoLevel)
+			logrus.SetLevel(logrus.InfoLevel)
 		} else {
-			log.SetLevel(log.ErrorLevel)
+			logrus.SetLevel(logrus.ErrorLevel)
 		}
 
 		return nil
