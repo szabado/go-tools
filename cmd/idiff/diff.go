@@ -10,6 +10,8 @@ import (
 func executeDiff(input io.Reader, output io.Writer) error {
 	logrus.Info("Getting input")
 	file1, file2 := readFiles(input)
+	logrus.Info("file1: ", file1)
+	logrus.Info("file2: ", file2)
 	logrus.Info("Input fetched")
 	file1Name, err := writeToTempFile(file1)
 	if err != nil {
