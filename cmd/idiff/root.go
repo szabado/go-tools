@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -33,7 +34,9 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return executeDiff(input)
+		err := executeDiff(input, output)
+		logrus.Info(err)
+		return err
 	},
 }
 

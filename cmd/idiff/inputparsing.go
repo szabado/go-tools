@@ -5,6 +5,8 @@ import (
 	"io"
 	"strings"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 func readFiles(inputReader io.Reader) (string, string) {
@@ -16,25 +18,21 @@ func readFiles(inputReader io.Reader) (string, string) {
 }
 
 func greedyReader(inputScanner *bufio.Scanner) []*[]string {
-	println("reading first line")
 	firstLine, _, _ := readLine(inputScanner)
-	println("read first line")
+	logrus.Info("First line read")
 	doc := []string{firstLine}
 	docs := []*[]string{&doc}
 	timeout := 50 * time.Millisecond
 loop:
 	for {
 		if len(docs) == 1 {
-			println("if")
 			line, duration, _ := readLine(inputScanner)
-			println("read line")
 			if duration >= timeout {
 				doc = []string{}
 				docs = append(docs, &doc)
 			}
 			doc = append(doc, line)
 		} else {
-			println("else")
 			line, duration := readLineWithTimeout(inputScanner, timeout)
 			doc = append(doc, line)
 			if duration >= timeout {
@@ -43,6 +41,7 @@ loop:
 		}
 	}
 
+	logrus.Infof("Lines read: %v chars, %v chars", len(*docs[0]), len(*docs[1]))
 	return docs
 }
 
