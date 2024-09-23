@@ -28,11 +28,12 @@ func executeDiff(input io.Reader, output io.Writer) error {
 	logrus.Info("cmd created")
 
 	outputBytes, err := cmd.Output()
-	if err != nil {
-		logrus.Warn("error running command: ", err)
-		return err
-	}
+	// if err != nil {
+	// 	logrus.Warn("error running command: ", err)
+	// 	return err
+	// }
 	output.Write(outputBytes)
 
-	return err
+	return nil
+	// return err
 }

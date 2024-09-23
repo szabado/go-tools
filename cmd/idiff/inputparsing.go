@@ -12,37 +12,55 @@ import (
 func readFiles(inputReader io.Reader) (string, string) {
 	scanner := bufio.NewScanner(inputReader)
 	results := greedyReader(scanner)
-	return strings.Join(*results[0], "\n"), strings.Join(*results[1], "\n")
+	return strings.Join(results[0], "\n"), strings.Join(results[1], "\n")
 	// fmt.Printf("%+v\n", *results[0])
 	// fmt.Printf("%+v\n", *results[1])
 }
 
-func greedyReader(inputScanner *bufio.Scanner) []*[]string {
+func greedyReader(inputScanner *bufio.Scanner) [][]string {
 	firstLine, _, _ := readLine(inputScanner)
 	logrus.Info("First line read")
 	doc := []string{firstLine}
-	docs := []*[]string{&doc}
-	timeout := 50 * time.Millisecond
+	doc2 := []string{}
+	logrus.Infof("doc1: %v", doc)
+	timeout := 200 * time.Millisecond
+	timeouts := 0
 loop:
 	for {
-		if len(docs) == 1 {
+		logrus.Infof("start: %v", doc)
+		if timeouts == 0 {
 			line, duration, _ := readLine(inputScanner)
+			logrus.Info("line: ", line)
 			if duration >= timeout {
-				doc = []string{}
-				docs = append(docs, &doc)
+				doc = append(doc, "")
+				logrus.Info("Timed out - switching to second doc")
+				doc2 = append(doc2, line)
+				logrus.Info("Doc2", doc2)
+				timeouts++
+			} else {
+				logrus.Info("Not timed out - first doc")
+				doc = append(doc, line)
 			}
-			doc = append(doc, line)
 		} else {
 			line, duration := readLineWithTimeout(inputScanner, timeout)
-			doc = append(doc, line)
+			logrus.Info("line: ", line)
 			if duration >= timeout {
-				break loop
+				logrus.Info("timed out")
+				if timeouts >= 2 {
+					logrus.Infof("end: %v", doc)
+					break loop
+				} else {
+					timeouts++
+				}
 			}
+			doc2 = append(doc2, line)
+			logrus.Infof("end: %v", doc)
 		}
+		logrus.Infof("end: %v", &doc)
 	}
 
-	logrus.Infof("Lines read: %v chars, %v chars", len(*docs[0]), len(*docs[1]))
-	return docs
+	// logrus.Infof("Lines read: %v chars, %v chars", len(docs[0]), len(docs[1]))
+	return [][]string{doc, doc2}
 }
 
 func readLine(inputReader *bufio.Scanner) (string, time.Duration, bool) {
