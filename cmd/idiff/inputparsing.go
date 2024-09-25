@@ -13,8 +13,6 @@ func readFiles(inputReader io.Reader) (string, string) {
 	scanner := bufio.NewScanner(inputReader)
 	results := greedyReader(scanner)
 	return strings.Join(results[0], "\n"), strings.Join(results[1], "\n")
-	// fmt.Printf("%+v\n", *results[0])
-	// fmt.Printf("%+v\n", *results[1])
 }
 
 func greedyReader(inputScanner *bufio.Scanner) [][]string {
@@ -59,7 +57,6 @@ loop:
 		logrus.Infof("end: %v", &doc)
 	}
 
-	// logrus.Infof("Lines read: %v chars, %v chars", len(docs[0]), len(docs[1]))
 	return [][]string{doc, doc2}
 }
 
@@ -94,44 +91,3 @@ type stringWithDuration struct {
 	duration time.Duration
 }
 
-// func readFile(input io.Reader) {
-// 	inputChan := make(chan string, 1)
-// 	inputScanner := bufio.NewScanner(input)
-// 	go readFileWithoutTimeout(inputChan)
-
-// 	i := 0
-// 	var allFiles [][]string
-// 	var file []string
-// 	scanner.ScanStrings()
-// 	allFiles = append(allFiles, file)
-// inputloop:
-// 	for {
-// 		select {
-// 		case line := <-inputChan:
-// 			input = append(input, line)
-// 		case <-time.After(200 * time.Millisecond):
-// 			var newInput []string
-// 			if i == 1 {
-// 				break inputloop
-// 			} else {
-// 				i++
-// 			}
-// 			input = newInput
-// 			allInputs = append(allInputs, input)
-// 		}
-// 	}
-
-// 	log.Info(allInputs)
-// }
-
-// func readFileWithoutTimeout(input chan string) error {
-// 	for {
-// 		in := bufio.NewReader(os.Stdin)
-// 		result, err := in.ReadString('\n')
-// 		if err != nil {
-// 			return err
-// 		}
-
-// 		input <- result
-// 	}
-// }
