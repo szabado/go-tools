@@ -33,7 +33,7 @@ func readPastedInput(inputReader io.Reader) (string, string) {
 		}
 	}
 
-	return strings.Join(doc, "\n"), strings.Join(doc2, "\n")
+	return join(doc), join(doc2)
 }
 
 func readLine(inputReader *bufio.Scanner) (string, time.Duration) {
@@ -45,6 +45,10 @@ func readLine(inputReader *bufio.Scanner) (string, time.Duration) {
 	elapsed := time.Since(start)
 
 	return text, elapsed
+}
+
+func join(input []string) string {
+	return strings.Join(input, "\n")
 }
 
 func readLineWithTimeout(inputScanner *bufio.Scanner, timeout time.Duration) (string, time.Duration) {
