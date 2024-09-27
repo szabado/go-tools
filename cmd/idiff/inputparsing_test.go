@@ -40,7 +40,7 @@ func TestReadLineEmpty(t *testing.T) {
 func TestReadLineWithTimeoutTimedOut(t *testing.T) {
 	assert := a.New(t)
 
-	reader := DelayedReader{100 * time.Millisecond, strings.NewReader("a\nb")}
+	reader := delayedReader{100 * time.Millisecond, strings.NewReader("a\nb")}
 	scanner := bufio.NewScanner(reader)
 	firstLine, elapsed := readLineWithTimeout(scanner, 50*time.Millisecond)
 	assert.Equal("", firstLine)
@@ -51,7 +51,7 @@ func TestReadLineWithTimeoutTimedOut(t *testing.T) {
 func TestReadLineWithTimeoutNotTimedOut(t *testing.T) {
 	assert := a.New(t)
 
-	reader := DelayedReader{50 * time.Millisecond, strings.NewReader("a\nb")}
+	reader := delayedReader{50 * time.Millisecond, strings.NewReader("a\nb")}
 	scanner := bufio.NewScanner(reader)
 	firstLine, elapsed := readLineWithTimeout(scanner, 100*time.Millisecond)
 	assert.Equal("a", firstLine)
@@ -59,14 +59,14 @@ func TestReadLineWithTimeoutNotTimedOut(t *testing.T) {
 	assert.Less(elapsed, 75*time.Millisecond)
 }
 
-type DelayedReader struct {
+type delayedReader struct {
 	delay            time.Duration
 	underlyingReader io.Reader
 }
 
-var _ io.Reader = (*DelayedReader)(nil)
+var _ io.Reader = (*delayedReader)(nil)
 
-func (re DelayedReader) Read(p []byte) (n int, err error) {
+func (re delayedReader) Read(p []byte) (n int, err error) {
 	time.Sleep(re.delay)
 	return re.underlyingReader.Read(p)
 }
