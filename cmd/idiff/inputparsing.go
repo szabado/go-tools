@@ -7,12 +7,11 @@ import (
 	"time"
 )
 
-func readPastedInput(inputReader io.Reader) (string, string) {
+func readPastedInput(inputReader io.Reader, timeout time.Duration) (string, string) {
 	inputScanner := bufio.NewScanner(inputReader)
 	firstLine, _ := readLine(inputScanner)
 	doc := []string{firstLine}
 	doc2 := []string{}
-	timeout := 200 * time.Millisecond
 	timeouts := 0
 	for timeouts < 2 {
 		if timeouts == 0 {

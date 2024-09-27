@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"io"
 	"os"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -11,6 +11,7 @@ import (
 
 var (
 	verbose bool
+	timeout time.Duration  = 200 * time.Millisecond
 	output  io.Writer      = os.Stdout
 	input   io.Reader      = os.Stdin
 	osExit  func(code int) = os.Exit
@@ -33,15 +34,14 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		err := executeDiff(input, output)
-		logrus.Info(err)
-		return err
+		return executeDiff(input, output, timeout)
 	},
 }
 
 func execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		logrus.Error(err)
 		osExit(1)
 	}
+	osExit(0)
 }

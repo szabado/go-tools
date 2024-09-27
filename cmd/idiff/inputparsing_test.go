@@ -59,6 +59,20 @@ func TestReadLineWithTimeoutNotTimedOut(t *testing.T) {
 	assert.Less(elapsed, 75*time.Millisecond)
 }
 
+func TestReadPastedInputs(t *testing.T) {
+	assert := a.New(t)
+
+	reader := io.MultiReader(
+		// The actual delay at the start isn't measured
+		delayedReader{100 * time.Millisecond, strings.NewReader("a\nb\nc\n")},
+		delayedReader{50 * time.Millisecond, strings.NewReader("d\ne\nf\n")},
+		delayedReader{50 * time.Millisecond, strings.NewReader("")},
+	)
+	firstInput, secondInput := readPastedInput(reader, 40*time.Millisecond)
+	assert.Equal("a\nb\nc\n", firstInput)
+	assert.Equal("d\ne\nf\n", secondInput)
+}
+
 type delayedReader struct {
 	delay            time.Duration
 	underlyingReader io.Reader

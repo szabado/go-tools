@@ -4,13 +4,14 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
 
-func executeDiff(input io.Reader, output io.Writer) error {
+func executeDiff(input io.Reader, output io.Writer, timeout time.Duration) error {
 	logrus.Info("Getting input")
-	file1, file2 := readPastedInput(input)
+	file1, file2 := readPastedInput(input, timeout)
 	logrus.Info("file1: ", file1)
 	logrus.Info("file2: ", file2)
 	logrus.Info("Input fetched")
