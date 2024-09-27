@@ -2,6 +2,7 @@
 .hermit
 
 # Binaries
-./cache
-./mssh
-./zkcli
+/cache
+/idiff
+/mssh
+/zkcli

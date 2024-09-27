@@ -5,74 +5,54 @@ import (
 	"io"
 	"strings"
 	"time"
-
-	"github.com/sirupsen/logrus"
 )
 
-func readFiles(inputReader io.Reader) (string, string) {
-	scanner := bufio.NewScanner(inputReader)
-	results := greedyReader(scanner)
-	return strings.Join(results[0], "\n"), strings.Join(results[1], "\n")
-}
-
-func greedyReader(inputScanner *bufio.Scanner) [][]string {
-	firstLine, _, _ := readLine(inputScanner)
-	logrus.Info("First line read")
+func readPastedInput(inputReader io.Reader) (string, string) {
+	inputScanner := bufio.NewScanner(inputReader)
+	firstLine, _ := readLine(inputScanner)
 	doc := []string{firstLine}
 	doc2 := []string{}
-	logrus.Infof("doc1: %v", doc)
 	timeout := 200 * time.Millisecond
 	timeouts := 0
-loop:
-	for {
-		logrus.Infof("start: %v", doc)
+	for timeouts < 2 {
 		if timeouts == 0 {
-			line, duration, _ := readLine(inputScanner)
-			logrus.Info("line: ", line)
+			line, duration := readLine(inputScanner)
 			if duration >= timeout {
 				doc = append(doc, "")
-				logrus.Info("Timed out - switching to second doc")
 				doc2 = append(doc2, line)
-				logrus.Info("Doc2", doc2)
 				timeouts++
 			} else {
-				logrus.Info("Not timed out - first doc")
 				doc = append(doc, line)
 			}
 		} else {
 			line, duration := readLineWithTimeout(inputScanner, timeout)
-			logrus.Info("line: ", line)
 			if duration >= timeout {
-				logrus.Info("timed out")
-				if timeouts >= 2 {
-					logrus.Infof("end: %v", doc)
-					break loop
-				} else {
-					timeouts++
-				}
+				timeouts++
 			}
 			doc2 = append(doc2, line)
-			logrus.Infof("end: %v", doc)
 		}
-		logrus.Infof("end: %v", &doc)
 	}
 
-	return [][]string{doc, doc2}
+	return strings.Join(doc, "\n"), strings.Join(doc2, "\n")
 }
 
-func readLine(inputReader *bufio.Scanner) (string, time.Duration, bool) {
+func readLine(inputReader *bufio.Scanner) (string, time.Duration) {
 	start := time.Now()
 	if !inputReader.Scan() {
-		return "", 0, false
+		return "", 0
 	}
 	text := inputReader.Text()
+	elapsed := time.Since(start)
 
-	return text, time.Since(start), true
+	return text, elapsed
 }
 
 func readLineWithTimeout(inputScanner *bufio.Scanner, timeout time.Duration) (string, time.Duration) {
 	resultChan := make(chan stringWithDuration, 1)
-	go readLineToChannel(resultChan, inputScanner)
+	go func() {
+		value, duration := readLine(inputScanner)
+		resultChan <- stringWithDuration{value, duration}
+	}()
 	select {
 	case result := <-resultChan:
 		return result.value, result.duration
@@ -81,13 +61,7 @@ func readLineWithTimeout(inputScanner *bufio.Scanner, timeout time.Duration) (st
 	}
 }
 
-func readLineToChannel(resultChan chan stringWithDuration, inputScanner *bufio.Scanner) {
-	value, duration, _ := readLine(inputScanner)
-	resultChan <- stringWithDuration{value, duration}
-}
-
 type stringWithDuration struct {
 	value    string
 	duration time.Duration
 }
-
