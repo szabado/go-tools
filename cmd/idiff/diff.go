@@ -30,8 +30,12 @@ func executeDiff(input io.Reader, output io.Writer) error {
 	cmd := exec.Command("diff", file1Name, file2Name)
 	logrus.Info("cmd created")
 
-	// TODO: Parse this input
 	outputBytes, err := cmd.Output()
+
+	castErr, ok := err.(*exec.ExitError)
+	if !ok || castErr.ExitCode() > 1 {
+		return err
+	}
 	output.Write(outputBytes)
 
 	return nil
